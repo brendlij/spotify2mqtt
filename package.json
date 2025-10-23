@@ -4,7 +4,7 @@
   "description": "",
   "license": "ISC",
   "author": "",
-  "type": "commonjs",
+  "type": "module",
   "main": "index.js",
   "scripts": {
     "auth": "node auth.js",
@@ -13,6 +13,7 @@
   },
   "dependencies": {
     "dotenv": "^17.2.3",
+    "express": "^5.1.0",
     "mqtt": "^5.14.1",
     "spotify-web-api-node": "^5.0.2"
   }

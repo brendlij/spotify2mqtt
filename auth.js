@@ -25,7 +25,7 @@ app.get("/callback", async (req, res) => {
     const data = await s.authorizationCodeGrant(code);
     const refresh = data.body.refresh_token;
     res.send(
-      `<pre>REFRESH TOKEN:\n${refresh}\n\nTrage ihn in .env ein (SPOTIFY_REFRESH_TOKEN)</pre>`
+      `<pre>REFRESH TOKEN:\n${refresh}\n\nPaste in .env: (SPOTIFY_REFRESH_TOKEN)</pre>`
     );
     console.log("REFRESH TOKEN:", refresh);
     setTimeout(() => process.exit(0), 1000);
