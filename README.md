@@ -30,6 +30,41 @@ git clone https://github.com/brendlij/spotify2mqtt.git
 cd spotify2mqtt
 ```
 
+---
+
+## 🏃‍♂️ Running Locally (without Docker)
+
+You can run spotify2mqtt directly on your machine if you have Node.js 22+ installed:
+
+1. Install dependencies:
+
+```bash
+npm install
+```
+
+2. Copy and edit your environment file:
+
+```bash
+cp .env.example .env
+# Edit .env with your credentials
+```
+
+3. Authorize Spotify (get your refresh token):
+
+```bash
+npm run auth
+```
+
+- Open the printed link in your browser, log in, and copy the refresh token into `.env`.
+
+4. Start the service:
+
+```bash
+npm start
+```
+
+---
+
 ### 2️⃣ Create your Spotify App
 
 - Go to [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/applications)
