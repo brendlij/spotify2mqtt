@@ -1,263 +1,188 @@
+# 🎵 spotify2mqtt
+
 <p align="center">
-<img src="https://img.shields.io/badge/Node.js-20%2B-brightgreen" alt="Node.js 20+ Required">
-<img src="https://img.shields.io/badge/MQTT-Publisher-blue" alt="MQTT Publisher">
-<img src="https://img.shields.io/badge/Docker-Ready-informational" alt="Docker Ready">
+  <img src="https://img.shields.io/badge/Node.js-22%2B-brightgreen" alt="Node.js 22+ Required">
+  <img src="https://img.shields.io/badge/MQTT-Publisher-blue" alt="MQTT Publisher">
+  <img src="https://img.shields.io/badge/Docker-Ready-informational" alt="Docker Ready">
 </p>
-Fetches your currently playing Spotify track and publishes the data as a clean JSON payload via MQTT. This lightweight bridge is perfect for integrating real-time playback information into Home Assistant, custom ESP displays, or any IoT project requiring quick state updates.
 
-✨ Features
+Fetches your **currently playing Spotify track** and publishes it via **MQTT**  
+→ perfect for Home Assistant, ESP displays, dashboards, etc.
 
-Real-Time Polling: Pulls the current Spotify playback status at a user-defined interval (default: $2,000$ms).
+---
 
-MQTT Publisher: Publishes a detailed JSON object containing title, artist, progress_ms, and playback state.
+## 🚀 Features
 
-Security Support: Works with both secured (username/password) and open MQTT brokers.
+- Realtime Spotify playback data via MQTT
+- Works locally or on remote servers (SSH tunnel supported)
+- Publishes track, artist, album, progress, device, queue, and cover image (base64)
+- Secure auth flow using Spotify’s official API
+- Lightweight Docker setup (Node 22 Alpine)
 
-Dockerized: Runs locally and is extremely lightweight, using an Alpine base image.
+---
 
-Simple Authentication: Includes an easy, one-time browser-based flow to obtain the necessary refresh token.
+## 🧱 Setup Guide
 
-🧱 Setup & Configuration
+### 1️⃣ Clone the repo
 
-This project is designed to be deployed quickly using Docker Compose.
-
-1. Clone the Repository
-
-git clone [https://github.com/yourusername/spotify2mqtt.git](https://github.com/yourusername/spotify2mqtt.git)
+```bash
+git clone https://github.com/brendlij/spotify2mqtt.git
 cd spotify2mqtt
+```
 
-2. Create Your Spotify Application
+### 2️⃣ Create your Spotify App
 
-Before proceeding, you need to register this service with Spotify to get the necessary credentials.
-
-Go to the Spotify Developer Dashboard.
-
-Click Create App and set the name (e.g., spotify2mqtt).
-
-In the app settings, click Edit Settings and add the following Redirect URI:
-
-[http://127.0.0.1:8888/callback](http://127.0.0.1:8888/callback)
-
-Tick the ✅ Web API box, accept the Developer Terms, and save.
-
-Copy your Client ID and Client Secret.
-
-3. Configure the Environment
-
-Copy the example environment file and update it with your credentials and broker details.
-
-cp .env.example .env
-
-Now, edit the newly created .env file:
-
-# --- SPOTIFY SETTINGS ---
-
-SPOTIFY_CLIENT_ID=your_client_id
-SPOTIFY_CLIENT_SECRET=your_client_secret
-SPOTIFY_REFRESH_TOKEN= # LEAVE EMPTY FOR NOW (Step 4)
-
-# --- MQTT SETTINGS ---
-
-MQTT_URL=mqtt://192.168.1.10:1883 # e.g., mqtt://broker-ip:port
-MQTT_USER=optional_user # Optional: remove if broker is unsecured
-
-MQTT_PASS=optional_pass # Optional: remove if broker is unsecured
-MQTT_TOPIC=homelab/spotify/now # The topic where data will be published
-POLL_MS=2000 # Polling interval in milliseconds (2s)
-
-4. Authorize Spotify (One-Time)
-
-You only need to do this step once to get your permanent Refresh Token.
-
-Run the interactive authorization container:
-
-docker compose run --rm -p 8888:8888 spotify2mqtt npm run auth
-
-The command will print a local link.
-
-Open the link in your browser and log in to Spotify.
-
-The browser will redirect and display a long Refresh Token.
-
-Copy this token and paste it into your .env file: SPOTIFY_REFRESH_TOKEN=your_token_here
-
-5. Build and Start the Service
-
-Once the .env file is complete, build the image and start the service in detached mode.
-
-docker compose build
-docker compose up -d
-
-The service will now run in the background, automatically refreshing the access token, fetching playback data, and publishing it to your configured MQTT topic every $2$ seconds.
-
-🧩 Example MQTT Payload
-
-The service publishes a single JSON object.
-
-{
-"is_playing": true,
-"title": "Everything In Its Right Place",
-"artist": "Radiohead",
-"album": "Kid A",
-"progress_ms": 73456,
-"duration_ms": 257000
-}
-
-🧠 Tips & Debugging
-
-- Logs: To monitor the service and check for errors, use the following command:
-
-  ```sh
-  docker compose logs -f spotify2mqtt
+- Go to [Spotify Developer Dashboard](https://developer.spotify.com/dashboard/applications)
+- Click **Create App**
+- Add a Redirect URI (must be exact!):
   ```
+  http://127.0.0.1:8889/callback
+  ```
+- Enable ✅ Web API
+- Copy your Client ID and Client Secret
 
-- Ports: After successfully completing the authorization (Step 4), you can safely remove the ports mapping (-p 8888:8888) from your docker-compose.yml file, as it is no longer needed.
+### 3️⃣ Create .env
 
-💥 Example Use Cases
-
-- Home Assistant: Create a media player card or dashboard widget showing current track information.
-- ESP Displays: Use an ESP32/ESP8266 and an OLED screen to create a dedicated, real-time Spotify display.
-- Ambient Lighting: Trigger color changes or effects based on the state (is_playing).
-
-⚙️ Tech Stack
-
-- Platform: Node.js $20+$
-- API: Spotify Web API
-- Messaging: MQTT (via mqtt package)
-- Deployment: Docker Compose (Alpine base)
-
-Made with ❤️ by [YourName]
-spotify2mqtt
-
-<p align="center">
-<img src="https://www.google.com/search?q=https://img.shields.io/badge/Node.js-20%2B-brightgreen" alt="Node.js 20+ Required">
-<img src="https://www.google.com/search?q=https://img.shields.io/badge/MQTT-Publisher-blue" alt="MQTT Publisher">
-<img src="https://www.google.com/search?q=https://img.shields.io/badge/Docker-Ready-informational" alt="Docker Ready">
-</p>
-
-Fetches your currently playing Spotify track and publishes the data as a clean JSON payload via MQTT. This lightweight bridge is perfect for integrating real-time playback information into Home Assistant, custom ESP displays, or any IoT project requiring quick state updates.
-
-✨ Features
-
-Real-Time Polling: Pulls the current Spotify playback status at a user-defined interval (default: $2,000$ms).
-
-MQTT Publisher: Publishes a detailed JSON object containing title, artist, progress_ms, and playback state.
-
-Security Support: Works with both secured (username/password) and open MQTT brokers.
-
-Dockerized: Runs locally and is extremely lightweight, using an Alpine base image.
-
-Simple Authentication: Includes an easy, one-time browser-based flow to obtain the necessary refresh token.
-
-🧱 Setup & Configuration
-
-This project is designed to be deployed quickly using Docker Compose.
-
-1. Clone the Repository
-
-git clone [https://github.com/yourusername/spotify2mqtt.git](https://github.com/yourusername/spotify2mqtt.git)
-cd spotify2mqtt
-
-2. Create Your Spotify Application
-
-Before proceeding, you need to register this service with Spotify to get the necessary credentials.
-
-Go to the Spotify Developer Dashboard.
-
-Click Create App and set the name (e.g., spotify2mqtt).
-
-In the app settings, click Edit Settings and add the following Redirect URI:
-
-[http://127.0.0.1:8888/callback](http://127.0.0.1:8888/callback)
-
-Tick the ✅ Web API box, accept the Developer Terms, and save.
-
-Copy your Client ID and Client Secret.
-
-3. Configure the Environment
-
-Copy the example environment file and update it with your credentials and broker details.
-
+```bash
 cp .env.example .env
+```
 
-Now, edit the newly created .env file:
+Then edit it:
 
-# --- SPOTIFY SETTINGS ---
-
+```ini
 SPOTIFY_CLIENT_ID=your_client_id
 SPOTIFY_CLIENT_SECRET=your_client_secret
-SPOTIFY_REFRESH_TOKEN= # LEAVE EMPTY FOR NOW (Step 4)
+SPOTIFY_REFRESH_TOKEN=      # leave empty for now
 
-# --- MQTT SETTINGS ---
+MQTT_URL=mqtt://192.168.x.x:1883
+MQTT_USER=optional
+MQTT_PASS=optional
+MQTT_TOPIC_BASE=homelab/spotify
+POLL_MS=2000
 
-MQTT_URL=mqtt://192.168.1.10:1883 # e.g., mqtt://broker-ip:port
-MQTT_USER=optional_user # Optional: remove if broker is unsecured
-MQTT_PASS=optional_pass # Optional: remove if broker is unsecured
-MQTT_TOPIC=homelab/spotify/now # The topic where data will be published
-POLL_MS=2000 # Polling interval in milliseconds (2s)
+AUTH_PORT=8889
+REDIRECT_HOST=127.0.0.1
+```
 
-4. Authorize Spotify (One-Time)
+---
 
-You only need to do this step once to get your permanent Refresh Token.
+## ⚡ Authorization (get your Refresh Token)
 
-Run the interactive authorization container:
+You must do this once to authorize Spotify.
+There are two ways depending on where you run Docker:
 
-docker compose run --rm -p 8888:8888 spotify2mqtt npm run auth
+### 🖥️ Local machine
 
-The command will print a local link.
+If you’re running Docker on your own PC:
 
-Open the link in your browser and log in to Spotify.
+```bash
+docker compose build --no-cache
+docker compose run --rm -p 8889:8889 spotify2mqtt npm run auth
+```
 
-The browser will redirect and display a long Refresh Token.
+Then open in your browser:
 
-Copy this token and paste it into your .env file: SPOTIFY_REFRESH_TOKEN=your_token_here
+```
+http://127.0.0.1:8889
+```
 
-5. Build and Start the Service
+→ Log in → You’ll see your REFRESH TOKEN → Copy it → Paste it into .env.
 
-Once the .env file is complete, build the image and start the service in detached mode.
+### 🌐 Remote server (e.g. Raspberry Pi, Beelink, VPS)
 
-docker compose build
+You can’t directly open 127.0.0.1:8889 from your PC —
+so you’ll use an SSH tunnel (safe and easy).
+
+On your local PC, open a tunnel:
+
+```bash
+ssh -L 8889:localhost:8889 user@your-server-ip
+```
+
+Inside that SSH session on the server:
+
+```bash
+docker compose build --no-cache
+docker compose run --rm -p 127.0.0.1:8889:8889 spotify2mqtt npm run auth
+```
+
+On your local PC, open:
+
+```
+http://127.0.0.1:8889
+```
+
+Log in → Copy the Refresh Token → Paste it into .env.
+
+✅ Once you have the token, you can close the tunnel — you’ll never need to auth again
+(unless you remove the app from your Spotify account).
+
+---
+
+## ▶️ Run the service
+
+```bash
 docker compose up -d
+```
 
-The service will now run in the background, automatically refreshing the access token, fetching playback data, and publishing it to your configured MQTT topic every $2$ seconds.
+---
 
-🧩 Example MQTT Payload
+## 📡 MQTT Topics
 
-The service publishes a single JSON object.
+| Topic                   | Description                                                  |
+| ----------------------- | ------------------------------------------------------------ |
+| homelab/spotify/state   | Playback state, track/artist/album, progress, shuffle/repeat |
+| homelab/spotify/context | Current context (playlist, album, artist, show, audiobook)   |
+| homelab/spotify/queue   | Upcoming tracks/episodes                                     |
+| homelab/spotify/device  | Current playback device                                      |
+| homelab/spotify/image   | Album/show cover { base64, url }                             |
 
+**Example payload (`/state`):**
+
+```json
 {
-"is_playing": true,
-"title": "Everything In Its Right Place",
-"artist": "Radiohead",
-"album": "Kid A",
-"progress_ms": 73456,
-"duration_ms": 257000
+  "is_playing": true,
+  "type": "track",
+  "title": "Everything In Its Right Place",
+  "artist": "Radiohead",
+  "album": "Kid A",
+  "progress_ms": 73456,
+  "duration_ms": 257000,
+  "shuffle_state": false,
+  "repeat_state": "context",
+  "timestamp": 1730000000000
 }
+```
 
-🧠 Tips & Debugging
+---
 
-Logs: To monitor the service and check for errors, use the following command:
+## 🧠 Notes
 
-docker compose logs -f spotify2mqtt
+- Redirect URI must match Spotify’s dashboard entry exactly (`http://127.0.0.1:8889/callback`)
+- Don’t use `localhost` → use `127.0.0.1` instead
+- After you get the token, you can remove the `ports:` line from `docker-compose.yml`
+- Works fine behind SSH tunnels, Docker networks, or Nginx proxies
 
-Ports: After successfully completing the authorization (Step 4), you can safely remove the ports mapping (-p 8888:8888) from your docker-compose.yml file, as it is no longer needed.
+---
 
-💥 Example Use Cases
+## 🧩 Troubleshooting
 
-Home Assistant: Create a media player card or dashboard widget showing current track information.
+| Problem                            | Fix                                                                                 |
+| ---------------------------------- | ----------------------------------------------------------------------------------- |
+| address already in use             | Another service (like mediamtx) is using that port → change AUTH_PORT               |
+| Browser can’t connect to 127.0.0.1 | Use SSH tunnel as shown above                                                       |
+| Auth success but no data           | Check MQTT broker URL & creds, view logs with `docker compose logs -f spotify2mqtt` |
+| Need to reauthorize                | Run the auth command again; new token replaces the old one                          |
 
-ESP Displays: Use an ESP32/ESP8266 and an OLED screen to create a dedicated, real-time Spotify display.
+---
 
-Ambient Lighting: Trigger color changes or effects based on the state (is_playing).
+## 💡 Example MQTT consumer (ESP/HA)
 
-⚙️ Tech Stack
+You can subscribe to `homelab/spotify/state` or `homelab/spotify/image`
+and display data on an OLED, or use it in Home Assistant via MQTT sensor.
 
-Platform: Node.js $20+$
+---
 
-API: Spotify Web API
-
-Messaging: MQTT (via mqtt package)
-
-Deployment: Docker Compose (Alpine base)
-
-Made with ❤️ by [YourName]
+<p align="center">
+Made with ❤️ by @brendlij
+</p>
