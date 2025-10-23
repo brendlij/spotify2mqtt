@@ -14,7 +14,7 @@ COPY . .
 
 # ---- Environment ----
 ENV NODE_ENV=production
-EXPOSE 9999
+EXPOSE 8889
 
 # ---- Start ----
 CMD ["node", "index.js"]
