@@ -1,0 +1,13 @@
+services:
+  spotify2mqtt:
+    build: .
+    container_name: spotify2mqtt
+    env_file: .env
+    restart: unless-stopped
+    ports:
+      - "8888:8888" # für einmaliges Auth-Setup (npm run auth)
+    healthcheck:
+      test: ["CMD", "node", "-e", "process.exit(0)"]
+      interval: 30s
+      timeout: 5s
+      retries: 3

@@ -1,0 +1,31 @@
+# Node
+node_modules/
+npm-debug.log*
+yarn-error.log
+
+# Env / credentials
+.env
+.env.local
+.env.production
+.env.development
+
+# Docker
+*.pid
+*.log
+*.tmp
+.dockerignore
+Dockerfile.old
+docker-compose.override.yml
+
+# Editor stuff
+.vscode/
+.idea/
+*.code-workspace
+
+# System
+.DS_Store
+Thumbs.db
+
+# Build outputs
+dist/
+build/
