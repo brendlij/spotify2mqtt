@@ -5,7 +5,7 @@ services:
     env_file: .env
     restart: unless-stopped
     ports:
-      - "9999:9999" # für einmaliges Auth-Setup (npm run auth)
+      - "${AUTH_PORT:-9999}:${AUTH_PORT:-9999}"
     healthcheck:
       test: ["CMD", "node", "-e", "process.exit(0)"]
       interval: 30s
