@@ -2,7 +2,7 @@ import "dotenv/config";
 import express from "express";
 import SpotifyWebApi from "spotify-web-api-node";
 
-const PORT = 8888;
+const PORT = process.env.AUTH_PORT || 9999;
 const REDIRECT_URI = `http://127.0.0.1:${PORT}/callback`;
 
 const s = new SpotifyWebApi({
